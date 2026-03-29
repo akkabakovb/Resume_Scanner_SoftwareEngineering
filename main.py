@@ -8,6 +8,7 @@ app = FastAPI(
 )
 
 app.include_router(roles.router)
+app.include_router(analyze.router)
 
 @app.get("/")
 async def root():
