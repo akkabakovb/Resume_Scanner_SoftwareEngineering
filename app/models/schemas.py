@@ -10,6 +10,8 @@ class ResumeTextRequest(BaseModel):
 class RoleMatch(BaseModel):
     title: str
     reason: str
+    match_score: int
+    key_skills: list[str]
 
 class RolesResponse(BaseModel):
     roles: list[RoleMatch]
