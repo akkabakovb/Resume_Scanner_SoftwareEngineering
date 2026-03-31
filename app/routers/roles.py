@@ -73,21 +73,23 @@ def _get_roles_from_openai(resume_text: str) -> RolesResponse:
 @router.post("/roles/text", response_model=RolesResponse)
 async def analyze_roles_text(body: ResumeTextRequest):
     """
-    Analyze a resume from plain text and return 3 matching job roles.
-
-    Accepts a JSON body: `{"resume_text": "..."}`
+    Submit your resume as plain text and discover the top 3 job roles
+    that best match your skills and experience. Each role includes a
+    match score out of 100 and the key skills that make you a strong fit.
+    Useful for quick testing without a PDF file.
     """
     if not body.resume_text.strip():
         raise HTTPException(status_code=400, detail="Resume text is empty or missing.")
     return _get_roles_from_openai(body.resume_text.strip())
 
 
-@router.post("/roles/upload", response_model=RolesResponse)
+@router.post("/roles", response_model=RolesResponse)
 async def analyze_roles_upload(file: UploadFile = File(...)):
     """
-    Analyze a resume from a PDF upload and return 3 matching job roles.
-
-    Accepts multipart/form-data with a `file` field containing a PDF.
+    Upload your PDF resume and discover the top 3 job roles that best
+    match your skills and experience. Each role includes a match score
+    out of 100 and the key skills from your resume that make you a
+    strong fit for that role.
     """
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
