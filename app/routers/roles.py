@@ -82,7 +82,7 @@ async def analyze_roles_text(body: ResumeTextRequest):
     return _get_roles_from_openai(body.resume_text.strip())
 
 
-@router.post("/roles/upload", response_model=RolesResponse)
+@router.post("/roles", response_model=RolesResponse)
 async def analyze_roles_upload(file: UploadFile = File(...)):
     """
     Analyze a resume from a PDF upload and return 3 matching job roles.
