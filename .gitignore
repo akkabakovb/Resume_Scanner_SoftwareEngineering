@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# md files
+PROJECT_CONTEXT.md
