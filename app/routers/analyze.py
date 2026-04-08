@@ -50,7 +50,7 @@ def _analyze_with_openai(resume_text: str) -> AnalysisResult:
         raise HTTPException(status_code=500, detail=f"Failed to parse OpenAI response: {str(e)}")
 
 
-@router.post("/analyze", response_model=AnalysisResponse)
+@router.post("/analyze", response_model=AnalysisResponse, include_in_schema=False)
 async def analyze(file: UploadFile = File(...)):
     """
     Upload your PDF resume for a comprehensive AI-powered analysis.
@@ -72,7 +72,7 @@ async def analyze(file: UploadFile = File(...)):
     return AnalysisResponse(filename=file.filename, analysis=analysis)
 
 
-@router.post("/analyze/text", response_model=AnalysisResponse)
+@router.post("/analyze/text", response_model=AnalysisResponse, include_in_schema=False)
 async def analyze_text(body: ResumeTextRequest):
     """
     Submit your resume as plain text for a comprehensive AI-powered

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import roles, analyze
+from app.routers import roles, analyze, resume, ats
 
 app = FastAPI(
     title="Resume Analyzer API",
@@ -9,6 +9,8 @@ app = FastAPI(
 
 app.include_router(roles.router)
 app.include_router(analyze.router)
+app.include_router(resume.router)
+app.include_router(ats.router)
 
 @app.get("/")
 async def root():
