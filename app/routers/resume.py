@@ -80,16 +80,3 @@ async def analyze_resume(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Could not extract text from PDF.")
 
     return _analyze_resume(text.strip())
-
-
-@router.post("/resume/text", response_model=ResumeAnalysisResponse)
-async def analyze_resume_text(body: ResumeTextRequest):
-    """
-    Submit a resume as plain text for a combined AI-powered analysis and job role
-    matching in a single request. Returns the same structured response as the PDF
-    upload endpoint. Useful for quick testing without a PDF file.
-    """
-    if not body.resume_text.strip():
-        raise HTTPException(status_code=400, detail="Resume text is empty or missing.")
-
-    return _analyze_resume(body.resume_text.strip())

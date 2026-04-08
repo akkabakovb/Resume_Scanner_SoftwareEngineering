@@ -87,20 +87,3 @@ async def ats_check(
 
     result = _run_ats_analysis(resume_text.strip(), job_description.strip())
     return ATSResponse(filename=file.filename, result=result)
-
-
-@router.post("/ats/text", response_model=ATSResponse)
-async def ats_check_text(body: ATSRequest):
-    """
-    Submit a resume and job description as plain text to receive an ATS compatibility
-    score. Returns the same structured response as the PDF upload endpoint. Useful
-    for quick testing without a PDF file.
-    """
-    if not body.resume_text.strip():
-        raise HTTPException(status_code=400, detail="Resume text is empty or missing.")
-
-    if not body.job_description.strip():
-        raise HTTPException(status_code=400, detail="Job description is empty or missing.")
-
-    result = _run_ats_analysis(body.resume_text.strip(), body.job_description.strip())
-    return ATSResponse(filename=None, result=result)
