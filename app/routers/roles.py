@@ -70,7 +70,7 @@ def _get_roles_from_openai(resume_text: str) -> RolesResponse:
         raise HTTPException(status_code=500, detail=f"Failed to parse OpenAI response: {str(e)}")
 
 
-@router.post("/roles/text", response_model=RolesResponse)
+@router.post("/roles/text", response_model=RolesResponse, include_in_schema=False)
 async def analyze_roles_text(body: ResumeTextRequest):
     """
     Submit your resume as plain text and discover the top 3 job roles
@@ -83,7 +83,7 @@ async def analyze_roles_text(body: ResumeTextRequest):
     return _get_roles_from_openai(body.resume_text.strip())
 
 
-@router.post("/roles", response_model=RolesResponse)
+@router.post("/roles", response_model=RolesResponse, include_in_schema=False)
 async def analyze_roles_upload(file: UploadFile = File(...)):
     """
     Upload your PDF resume and discover the top 3 job roles that best
