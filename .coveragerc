@@ -1,0 +1,6 @@
+[run]
+source = app
+omit =
+    app/routers/roles.py
+    app/routers/analyze.py
+    app/utils.py
