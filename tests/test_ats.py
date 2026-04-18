@@ -1,10 +1,13 @@
+import json
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
+from openai import OpenAIError
 from unittest.mock import Mock, patch
 
 from main import app
 from app.models.schemas import ATSResult
+from app.routers.ats import _run_ats_analysis
 
 client = TestClient(app)
 
@@ -119,3 +122,99 @@ def test_ats_openai_error(mock_run_ats, mock_fitz_open):
     )
 
     assert response.status_code == 500
+
+
+@patch("app.routers.ats.fitz.open")
+def test_ats_empty_pdf_text(mock_fitz_open):
+    mock_page = Mock()
+    mock_page.get_text.return_value = ""
+    mock_fitz_open.return_value = [mock_page]
+
+    response = client.post(
+        "/ats",
+        files={"file": ("resume.pdf", b"%PDF-content", "application/pdf")},
+        data={"job_description": "We need a Python developer with FastAPI experience."},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Could not extract text from PDF."
+
+
+@patch("app.routers.ats.fitz.open")
+@patch("app.routers.ats._run_ats_analysis")
+def test_ats_parse_error(mock_run_ats, mock_fitz_open):
+    mock_page = Mock()
+    mock_page.get_text.return_value = "Valid resume content"
+    mock_fitz_open.return_value = [mock_page]
+    mock_run_ats.side_effect = HTTPException(status_code=500, detail="Failed to parse OpenAI response: test")
+
+    response = client.post(
+        "/ats",
+        files={"file": ("resume.pdf", b"%PDF-blank", "application/pdf")},
+        data={"job_description": "We need a Python developer with FastAPI experience."},
+    )
+
+    assert response.status_code == 500
+
+
+MOCK_ATS_CONTENT = json.dumps({
+    "ats_score": 85,
+    "matched_keywords": ["Python", "FastAPI"],
+    "missing_keywords": ["Docker"],
+    "suggestions": ["Add Docker experience"],
+    "verdict": "Likely to pass ATS screening",
+})
+
+
+@patch("app.routers.ats.client.chat.completions.create")
+def test_ats_openai_error_in_function(mock_create):
+    mock_create.side_effect = OpenAIError("test error")
+
+    with pytest.raises(HTTPException) as exc_info:
+        _run_ats_analysis("Sample resume text", "We need a Python developer with FastAPI experience.")
+
+    assert exc_info.value.status_code == 500
+    assert "OpenAI API error" in exc_info.value.detail
+
+
+@patch("app.routers.ats.client.chat.completions.create")
+def test_ats_json_parse_error_in_function(mock_create):
+    mock_message = Mock()
+    mock_message.content = "invalid json {{{{"
+    mock_choice = Mock()
+    mock_choice.message = mock_message
+    mock_create.return_value = Mock(choices=[mock_choice])
+
+    with pytest.raises(HTTPException) as exc_info:
+        _run_ats_analysis("Sample resume text", "We need a Python developer with FastAPI experience.")
+
+    assert exc_info.value.status_code == 500
+    assert "Failed to parse OpenAI response" in exc_info.value.detail
+
+
+def test_ats_empty_file_bytes():
+    response = client.post(
+        "/ats",
+        files={"file": ("resume.pdf", b"", "application/pdf")},
+        data={"job_description": "We need a Python developer with FastAPI experience."},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Uploaded file is empty."
+
+
+@patch("app.routers.ats.client.chat.completions.create")
+def test_ats_analysis_function(mock_create):
+    mock_message = Mock()
+    mock_message.content = MOCK_ATS_CONTENT
+    mock_choice = Mock()
+    mock_choice.message = mock_message
+    mock_create.return_value = Mock(choices=[mock_choice])
+
+    result = _run_ats_analysis("Sample resume text", "We need a Python developer with FastAPI experience.")
+
+    assert result.ats_score == 85
+    assert result.matched_keywords == ["Python", "FastAPI"]
+    assert result.missing_keywords == ["Docker"]
+    assert result.suggestions == ["Add Docker experience"]
+    assert result.verdict == "Likely to pass ATS screening"
