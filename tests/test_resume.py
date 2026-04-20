@@ -1,13 +1,14 @@
 import json
+from unittest.mock import Mock, patch
+
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from openai import OpenAIError
-from unittest.mock import Mock, patch
 
-from resume_scanner.main import app
 from resume_scanner.app.models.schemas import ResumeAnalysisResponse
 from resume_scanner.app.routers.resume import _analyze_resume
+from resume_scanner.main import app
 
 client = TestClient(app)
 
@@ -78,9 +79,15 @@ def test_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     if expected_status_code == 200:
         with patch("app.routers.resume._analyze_resume") as mock_analyze:
             mock_analyze.return_value = VALID_RESUME_RESULT
-            response = client.post("/resume", files={"file": ("resume.pdf", b"%PDF-blank", "application/pdf")},)
+            response = client.post(
+                "/resume",
+                files={"file": ("resume.pdf", b"%PDF-blank", "application/pdf")},
+            )
     else:
-        response = client.post("/resume", files={"file": ("resume.pdf", b"%PDF-blank", "application/pdf")},)
+        response = client.post(
+            "/resume",
+            files={"file": ("resume.pdf", b"%PDF-blank", "application/pdf")},
+        )
 
     assert response.status_code == expected_status_code
 
