@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import roles, analyze, resume, ats
+from resume_scanner.app.routers import roles, analyze, resume, ats
 
 app = FastAPI(
     title="Resume Analyzer API",

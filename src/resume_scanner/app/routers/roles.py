@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from openai import OpenAI, OpenAIError
 
-from app.models.schemas import ResumeTextRequest, RoleMatch, RolesResponse
+from resume_scanner.app.models.schemas import ResumeTextRequest, RoleMatch, RolesResponse
 
 load_dotenv()
 

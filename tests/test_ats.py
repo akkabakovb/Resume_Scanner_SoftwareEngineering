@@ -5,9 +5,9 @@ from fastapi.testclient import TestClient
 from openai import OpenAIError
 from unittest.mock import Mock, patch
 
-from main import app
-from app.models.schemas import ATSResult
-from app.routers.ats import _run_ats_analysis
+from resume_scanner.main import app
+from resume_scanner.app.models.schemas import ATSResult
+from resume_scanner.app.routers.ats import _run_ats_analysis
 
 client = TestClient(app)
 
@@ -64,7 +64,7 @@ def test_ats_content_type(filename, content_type, expected_status_code):
         pytest.param(["Valid resume content"], 200, id="valid_content_success"),
     ]
 )
-@patch("app.routers.ats.fitz.open")
+@patch("resume_scanner.app.routers.ats.fitz.open")
 def test_ats_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     mock_pages = []
     for text in pages_text:
@@ -91,7 +91,7 @@ def test_ats_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     assert response.status_code == expected_status_code
 
 
-@patch("app.routers.ats.fitz.open")
+@patch("resume_scanner.app.routers.ats.fitz.open")
 def test_ats_empty_job_description(mock_fitz_open):
     mock_page = Mock()
     mock_page.get_text.return_value = "Valid resume content"
@@ -107,8 +107,8 @@ def test_ats_empty_job_description(mock_fitz_open):
     assert response.json()["detail"] == "Job description is empty or missing."
 
 
-@patch("app.routers.ats.fitz.open")
-@patch("app.routers.ats._run_ats_analysis")
+@patch("resume_scanner.app.routers.ats.fitz.open")
+@patch("resume_scanner.app.routers.ats._run_ats_analysis")
 def test_ats_openai_error(mock_run_ats, mock_fitz_open):
     mock_page = Mock()
     mock_page.get_text.return_value = "Valid resume content"
@@ -124,7 +124,7 @@ def test_ats_openai_error(mock_run_ats, mock_fitz_open):
     assert response.status_code == 500
 
 
-@patch("app.routers.ats.fitz.open")
+@patch("resume_scanner.app.routers.ats.fitz.open")
 def test_ats_empty_pdf_text(mock_fitz_open):
     mock_page = Mock()
     mock_page.get_text.return_value = ""
@@ -140,8 +140,8 @@ def test_ats_empty_pdf_text(mock_fitz_open):
     assert response.json()["detail"] == "Could not extract text from PDF."
 
 
-@patch("app.routers.ats.fitz.open")
-@patch("app.routers.ats._run_ats_analysis")
+@patch("resume_scanner.app.routers.ats.fitz.open")
+@patch("resume_scanner.app.routers.ats._run_ats_analysis")
 def test_ats_parse_error(mock_run_ats, mock_fitz_open):
     mock_page = Mock()
     mock_page.get_text.return_value = "Valid resume content"
@@ -166,7 +166,7 @@ MOCK_ATS_CONTENT = json.dumps({
 })
 
 
-@patch("app.routers.ats.client.chat.completions.create")
+@patch("resume_scanner.app.routers.ats.client.chat.completions.create")
 def test_ats_openai_error_in_function(mock_create):
     mock_create.side_effect = OpenAIError("test error")
 
@@ -177,7 +177,7 @@ def test_ats_openai_error_in_function(mock_create):
     assert "OpenAI API error" in exc_info.value.detail
 
 
-@patch("app.routers.ats.client.chat.completions.create")
+@patch("resume_scanner.app.routers.ats.client.chat.completions.create")
 def test_ats_json_parse_error_in_function(mock_create):
     mock_message = Mock()
     mock_message.content = "invalid json {{{{"
@@ -203,7 +203,7 @@ def test_ats_empty_file_bytes():
     assert response.json()["detail"] == "Uploaded file is empty."
 
 
-@patch("app.routers.ats.client.chat.completions.create")
+@patch("resume_scanner.app.routers.ats.client.chat.completions.create")
 def test_ats_analysis_function(mock_create):
     mock_message = Mock()
     mock_message.content = MOCK_ATS_CONTENT

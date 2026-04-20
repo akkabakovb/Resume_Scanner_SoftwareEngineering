@@ -1,6 +1,6 @@
 [run]
-source = app
+source = src/resume_scanner/app
 omit =
-    app/routers/roles.py
-    app/routers/analyze.py
-    app/utils.py
+    src/resume_scanner/app/routers/roles.py
+    src/resume_scanner/app/routers/analyze.py
+    src/resume_scanner/app/utils.py

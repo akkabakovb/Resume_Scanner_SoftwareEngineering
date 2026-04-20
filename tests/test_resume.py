@@ -5,9 +5,9 @@ from fastapi.testclient import TestClient
 from openai import OpenAIError
 from unittest.mock import Mock, patch
 
-from main import app
-from app.models.schemas import ResumeAnalysisResponse
-from app.routers.resume import _analyze_resume
+from resume_scanner.main import app
+from resume_scanner.app.models.schemas import ResumeAnalysisResponse
+from resume_scanner.app.routers.resume import _analyze_resume
 
 client = TestClient(app)
 
@@ -65,7 +65,7 @@ def test_content_type(filename, content_type, expected_status_code):
         pytest.param(["Valid resume content"], 200, id="valid_content_success"),
     ]
 )
-@patch("app.routers.resume.fitz.open")
+@patch("resume_scanner.app.routers.resume.fitz.open")
 def test_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     # create mock pages
     mock_pages = []
@@ -103,7 +103,7 @@ MOCK_ANALYZE_CONTENT = json.dumps({
 })
 
 
-@patch("app.routers.resume.client.chat.completions.create")
+@patch("resume_scanner.app.routers.resume.client.chat.completions.create")
 def test_resume_analyze_function(mock_create):
     mock_message = Mock()
     mock_message.content = MOCK_ANALYZE_CONTENT
@@ -124,7 +124,7 @@ def test_resume_analyze_function(mock_create):
     assert result.matched_roles[0].match_score == 90
 
 
-@patch("app.routers.resume.client.chat.completions.create")
+@patch("resume_scanner.app.routers.resume.client.chat.completions.create")
 def test_resume_openai_error(mock_create):
     mock_create.side_effect = OpenAIError("test error")
 
@@ -134,7 +134,7 @@ def test_resume_openai_error(mock_create):
     assert exc_info.value.status_code == 500
 
 
-@patch("app.routers.resume.client.chat.completions.create")
+@patch("resume_scanner.app.routers.resume.client.chat.completions.create")
 def test_resume_json_parse_error(mock_create):
     mock_message = Mock()
     mock_message.content = "invalid json {{{{"
