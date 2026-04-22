@@ -13,3 +13,6 @@ wheels/
 # md files
 PROJECT_CONTEXT.md
 .vs/
+
+# coverage report
+.coverage
