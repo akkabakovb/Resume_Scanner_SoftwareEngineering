@@ -379,7 +379,7 @@ git push origin feature/your-feature-name
 
 - Always pull the latest master before starting work: `git pull origin master`
 - Never commit `.env` to GitHub — you will lose 15 points automatically on the final presentation
-- Always activate your virtual environment before working: `source .venv/bin/activate`
+- Always activate your virtual environment before working: `.venv\Scripts\activate`
 - Run the app with: `uv run uvicorn main:app --reload`
 - View interactive API docs at: `http://localhost:8000/docs`
 - If `uv.lock` has conflicts, delete it and run `uv sync` to regenerate
