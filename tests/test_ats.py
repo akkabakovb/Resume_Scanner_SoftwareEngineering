@@ -33,8 +33,8 @@ VALID_ATS_RESULT = ATSResult(
 )
 def test_ats_content_type(filename, content_type, expected_status_code):
     if content_type == "application/pdf":
-        with patch("app.routers.ats.fitz.open") as mock_fitz_open, \
-             patch("app.routers.ats._run_ats_analysis") as mock_run_ats:
+        with patch("resume_scanner.app.routers.ats.fitz.open") as mock_fitz_open, \
+             patch("resume_scanner.app.routers.ats._run_ats_analysis") as mock_run_ats:
             mock_page = Mock()
             mock_page.get_text.return_value = "Valid resume content"
             mock_fitz_open.return_value = [mock_page]
@@ -75,7 +75,7 @@ def test_ats_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     mock_fitz_open.return_value = mock_pages
 
     if expected_status_code == 200:
-        with patch("app.routers.ats._run_ats_analysis") as mock_run_ats:
+        with patch("resume_scanner.app.routers.ats._run_ats_analysis") as mock_run_ats:
             mock_run_ats.return_value = VALID_ATS_RESULT
             response = client.post(
                 "/ats",
