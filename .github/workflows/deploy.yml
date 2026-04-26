@@ -26,7 +26,6 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          mkdir -p coverage
           uv run coverage run --source=src/resume_scanner/app -m pytest
           uv run coverage lcov -o coverage/lcov.info
           uv run coverage report
