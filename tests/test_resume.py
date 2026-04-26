@@ -37,8 +37,8 @@ VALID_RESUME_RESULT = ResumeAnalysisResponse(
 def test_content_type(filename, content_type, expected_status_code):
     # Only mock for valid PDF case
     if content_type == "application/pdf":
-        with patch("app.routers.resume.fitz.open") as mock_fitz_open, \
-             patch("app.routers.resume._analyze_resume") as mock_analyze:
+        with patch("resume_scanner.app.routers.resume.fitz.open") as mock_fitz_open, \
+             patch("resume_scanner.app.routers.resume._analyze_resume") as mock_analyze:
             mock_page = Mock()
             mock_page.get_text.return_value = "Valid resume text"
             mock_fitz_open.return_value = [mock_page]
@@ -77,7 +77,7 @@ def test_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     mock_fitz_open.return_value = mock_pages
 
     if expected_status_code == 200:
-        with patch("app.routers.resume._analyze_resume") as mock_analyze:
+        with patch("resume_scanner.app.routers.resume._analyze_resume") as mock_analyze:
             mock_analyze.return_value = VALID_RESUME_RESULT
             response = client.post(
                 "/resume",
