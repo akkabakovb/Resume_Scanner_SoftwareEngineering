@@ -1,18 +1,3 @@
-
-> AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
-
-[![CI/CD](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml/badge.svg)](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml)
-![Python](https://img.shields.io/badge/Python-3.12+-blue)
-
-README.md
-9 KB
-﻿
-koraskoirala
-koraskoirala
- 
-Just sleeping 😴
-# 🎯 Resume Analyzer API
-
 > AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
 
 [![CI/CD](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml/badge.svg)](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml)
@@ -319,7 +304,7 @@ docker run -p 80:80 \
 |---|---|---|
 | Bektur Akkabakov | [@akkabakovb](https://github.com/akkabakovb) | Team Lead, /analyze endpoint, Dockerfile, CI/CD pipeline |
 | Koras Koirala | [@koras7](https://github.com/koras7) | /ats endpoint, /resume endpoint, unit tests, AWS deployment |
-| Deepan | @deepanpun | /roles endpoint, /ats unit tests |
+| Deepan | [@deepanpun](https://github.com/deepanpun) | /roles endpoint, /ats unit tests |
 | Himanshu Jha | [@himanshujha05](https://github.com/himanshujha05) | /analyze endpoint, /resume unit tests |
 
 ---
@@ -327,5 +312,3 @@ docker run -p 80:80 \
 ## 📄 License
 
 This project was built for CS 3321 — Introduction to Software Engineering at Idaho State University, Spring 2026.
-README.md
-9 KB
