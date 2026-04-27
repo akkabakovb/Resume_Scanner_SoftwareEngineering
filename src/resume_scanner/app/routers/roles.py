@@ -54,9 +54,7 @@ def _get_roles_from_openai(resume_text: str) -> RolesResponse:
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": ROLES_PROMPT.format(resume_text=resume_text)}
-            ],
+            messages=[{"role": "user", "content": ROLES_PROMPT.format(resume_text=resume_text)}],
             response_format={"type": "json_object"},
         )
     except OpenAIError as e:

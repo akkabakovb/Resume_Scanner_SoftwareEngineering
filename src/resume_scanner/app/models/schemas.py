@@ -4,10 +4,13 @@ from pydantic import BaseModel
 
 # ---- REQUEST MODELS ----
 
+
 class ResumeTextRequest(BaseModel):
     resume_text: str
 
+
 # ---- RESPONSE MODELS ----
+
 
 class RoleMatch(BaseModel):
     title: str
@@ -15,8 +18,10 @@ class RoleMatch(BaseModel):
     match_score: int
     key_skills: list[str]
 
+
 class RolesResponse(BaseModel):
     roles: list[RoleMatch]
+
 
 class AnalysisResult(BaseModel):
     score: int
@@ -26,9 +31,11 @@ class AnalysisResult(BaseModel):
     improved_summary: str
     recommendation: str
 
+
 class AnalysisResponse(BaseModel):
     filename: Optional[str] = None
     analysis: AnalysisResult
+
 
 class ResumeAnalysisResponse(BaseModel):
     score: int
@@ -39,9 +46,11 @@ class ResumeAnalysisResponse(BaseModel):
     recommendation: str
     matched_roles: list[RoleMatch]
 
+
 class ATSRequest(BaseModel):
     resume_text: str
     job_description: str
+
 
 class ATSResult(BaseModel):
     ats_score: int
@@ -49,6 +58,7 @@ class ATSResult(BaseModel):
     missing_keywords: list[str]
     suggestions: list[str]
     verdict: str
+
 
 class ATSResponse(BaseModel):
     filename: Optional[str] = None

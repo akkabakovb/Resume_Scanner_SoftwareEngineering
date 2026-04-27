@@ -28,17 +28,19 @@ VALID_RESUME_RESULT = ResumeAnalysisResponse(
     "filename, content_type, expected_status_code",
     [
         pytest.param("resume.docx", "application/vnd.openxmlformats", 400, id="docx_not_allowed"),
-        pytest.param("resume.txt",  "text/plain", 400, id="txt_not_allowed"),
-        pytest.param("resume.png",  "image/png", 400, id="png_not_allowed"),
-        pytest.param("resume.csv",  "text/csv", 400, id="csv_not_allowed"),
-        pytest.param("resume.pdf",  "application/pdf", 200, id="pdf_allowed"),
-    ]
+        pytest.param("resume.txt", "text/plain", 400, id="txt_not_allowed"),
+        pytest.param("resume.png", "image/png", 400, id="png_not_allowed"),
+        pytest.param("resume.csv", "text/csv", 400, id="csv_not_allowed"),
+        pytest.param("resume.pdf", "application/pdf", 200, id="pdf_allowed"),
+    ],
 )
 def test_content_type(filename, content_type, expected_status_code):
     # Only mock for valid PDF case
     if content_type == "application/pdf":
-        with patch("resume_scanner.app.routers.resume.fitz.open") as mock_fitz_open, \
-             patch("resume_scanner.app.routers.resume._analyze_resume") as mock_analyze:
+        with (
+            patch("resume_scanner.app.routers.resume.fitz.open") as mock_fitz_open,
+            patch("resume_scanner.app.routers.resume._analyze_resume") as mock_analyze,
+        ):
             mock_page = Mock()
             mock_page.get_text.return_value = "Valid resume text"
             mock_fitz_open.return_value = [mock_page]
@@ -56,15 +58,16 @@ def test_content_type(filename, content_type, expected_status_code):
 
     assert response.status_code == expected_status_code
 
+
 # pdf content tests
 @pytest.mark.parametrize(
     "pages_text, expected_status_code",
     [
-        pytest.param(["   "],        400, id="spaces_only"),
-        pytest.param(["\n", "\t"],   400, id="whitespace_chars"),
-        pytest.param(["", "", ""],   400, id="all_empty_pages"),
+        pytest.param(["   "], 400, id="spaces_only"),
+        pytest.param(["\n", "\t"], 400, id="whitespace_chars"),
+        pytest.param(["", "", ""], 400, id="all_empty_pages"),
         pytest.param(["Valid resume content"], 200, id="valid_content_success"),
-    ]
+    ],
 )
 @patch("resume_scanner.app.routers.resume.fitz.open")
 def test_pdf_content(mock_fitz_open, pages_text, expected_status_code):
@@ -92,22 +95,24 @@ def test_pdf_content(mock_fitz_open, pages_text, expected_status_code):
     assert response.status_code == expected_status_code
 
 
-MOCK_ANALYZE_CONTENT = json.dumps({
-    "score": 85,
-    "strengths": ["Strong Python skills"],
-    "weaknesses": ["Lacks certifications"],
-    "skills": ["Python", "FastAPI"],
-    "improved_summary": "Results-driven developer",
-    "recommendation": "Apply for internships",
-    "matched_roles": [
-        {
-            "title": "Backend Developer",
-            "reason": "Strong Python experience",
-            "match_score": 90,
-            "key_skills": ["Python", "FastAPI"],
-        }
-    ],
-})
+MOCK_ANALYZE_CONTENT = json.dumps(
+    {
+        "score": 85,
+        "strengths": ["Strong Python skills"],
+        "weaknesses": ["Lacks certifications"],
+        "skills": ["Python", "FastAPI"],
+        "improved_summary": "Results-driven developer",
+        "recommendation": "Apply for internships",
+        "matched_roles": [
+            {
+                "title": "Backend Developer",
+                "reason": "Strong Python experience",
+                "match_score": 90,
+                "key_skills": ["Python", "FastAPI"],
+            }
+        ],
+    }
+)
 
 
 @patch("resume_scanner.app.routers.resume.client.chat.completions.create")

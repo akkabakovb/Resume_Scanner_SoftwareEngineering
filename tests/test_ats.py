@@ -26,15 +26,17 @@ VALID_ATS_RESULT = ATSResult(
     "filename, content_type, expected_status_code",
     [
         pytest.param("resume.docx", "application/vnd.openxmlformats", 400, id="docx_not_allowed"),
-        pytest.param("resume.txt",  "text/plain", 400, id="txt_not_allowed"),
-        pytest.param("resume.png",  "image/png", 400, id="png_not_allowed"),
-        pytest.param("resume.pdf",  "application/pdf", 200, id="pdf_allowed"),
-    ]
+        pytest.param("resume.txt", "text/plain", 400, id="txt_not_allowed"),
+        pytest.param("resume.png", "image/png", 400, id="png_not_allowed"),
+        pytest.param("resume.pdf", "application/pdf", 200, id="pdf_allowed"),
+    ],
 )
 def test_ats_content_type(filename, content_type, expected_status_code):
     if content_type == "application/pdf":
-        with patch("resume_scanner.app.routers.ats.fitz.open") as mock_fitz_open, \
-             patch("resume_scanner.app.routers.ats._run_ats_analysis") as mock_run_ats:
+        with (
+            patch("resume_scanner.app.routers.ats.fitz.open") as mock_fitz_open,
+            patch("resume_scanner.app.routers.ats._run_ats_analysis") as mock_run_ats,
+        ):
             mock_page = Mock()
             mock_page.get_text.return_value = "Valid resume content"
             mock_fitz_open.return_value = [mock_page]
@@ -59,11 +61,11 @@ def test_ats_content_type(filename, content_type, expected_status_code):
 @pytest.mark.parametrize(
     "pages_text, expected_status_code",
     [
-        pytest.param(["   "],                  400, id="spaces_only"),
-        pytest.param(["\n", "\t"],             400, id="whitespace_chars"),
-        pytest.param(["", "", ""],             400, id="all_empty_pages"),
+        pytest.param(["   "], 400, id="spaces_only"),
+        pytest.param(["\n", "\t"], 400, id="whitespace_chars"),
+        pytest.param(["", "", ""], 400, id="all_empty_pages"),
         pytest.param(["Valid resume content"], 200, id="valid_content_success"),
-    ]
+    ],
 )
 @patch("resume_scanner.app.routers.ats.fitz.open")
 def test_ats_pdf_content(mock_fitz_open, pages_text, expected_status_code):
@@ -161,13 +163,15 @@ def test_ats_parse_error(mock_run_ats, mock_fitz_open):
     assert response.status_code == 500
 
 
-MOCK_ATS_CONTENT = json.dumps({
-    "ats_score": 85,
-    "matched_keywords": ["Python", "FastAPI"],
-    "missing_keywords": ["Docker"],
-    "suggestions": ["Add Docker experience"],
-    "verdict": "Likely to pass ATS screening",
-})
+MOCK_ATS_CONTENT = json.dumps(
+    {
+        "ats_score": 85,
+        "matched_keywords": ["Python", "FastAPI"],
+        "missing_keywords": ["Docker"],
+        "suggestions": ["Add Docker experience"],
+        "verdict": "Likely to pass ATS screening",
+    }
+)
 
 
 @patch("resume_scanner.app.routers.ats.client.chat.completions.create")

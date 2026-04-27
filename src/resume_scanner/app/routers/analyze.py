@@ -34,9 +34,7 @@ def _analyze_with_openai(resume_text: str) -> AnalysisResult:
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": ANALYZE_PROMPT.format(resume_text=resume_text)}
-            ],
+            messages=[{"role": "user", "content": ANALYZE_PROMPT.format(resume_text=resume_text)}],
             response_format={"type": "json_object"},
         )
     except OpenAIError as e:
