@@ -25,11 +25,12 @@ jobs:
 
       - name: Run linting
         run: |
-          uv run ruff check .
+          uv run ruff check . --fix
           uv run ruff format --check .
           
   coverage:
     name: Coverage
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
