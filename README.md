@@ -1,3 +1,4 @@
+# 🎯 Resume Analyzer API
 > AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
 
 [![CI/CD](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml/badge.svg)](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml)
