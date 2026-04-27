@@ -319,7 +319,7 @@ docker run -p 80:80 \
 |---|---|---|
 | Bektur Akkabakov | [@akkabakovb](https://github.com/akkabakovb) | Team Lead, /analyze endpoint, Dockerfile, CI/CD pipeline |
 | Koras Koirala | [@koras7](https://github.com/koras7) | /ats endpoint, /resume endpoint, unit tests, AWS deployment |
-| Deepan | — | /roles endpoint, /ats unit tests |
+| Deepan | @deepanpun | /roles endpoint, /ats unit tests |
 | Himanshu Jha | [@himanshujha05](https://github.com/himanshujha05) | /analyze endpoint, /resume unit tests |
 
 ---
