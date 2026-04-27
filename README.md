@@ -1,52 +1,101 @@
+Deepan
+deepan2527
+Online
+
+koraskoirala — 3/18/2026 12:08 AM
+yo garnu ani same branch ma hunxam hami tesma garna parxa
+Deepan — 3/18/2026 12:09 AM
+Ok
+koraskoirala — 4/15/2026 11:38 PM
+Dipak ji
+Deepan — 4/15/2026 11:38 PM
+Bhana
+koraskoirala — 4/15/2026 11:39 PM
+projects ma gayera ticket number #17 ma yo comment hanera close garnu ta ticket:
+
+Completed. Implemented 10 unit tests in tests/test_ats.py covering:
+
+test_ats_content_type (4 cases) — validates file type rejection 
+for docx, txt, png and accepts valid PDF
+test_ats_pdf_content (4 cases) — validates PDF content rejection
+for spaces, whitespace, empty pages and accepts valid content
+test_ats_empty_job_description — validates empty job description 
+returns 400 with correct error message
+test_ats_openai_error — validates OpenAI failure returns 500
+
+All OpenAI calls mocked using unittest.mock — no real API credits used
+All 10 tests passing ✅
+(Unit Tests for /ats endpoint)
+Deepan — 4/15/2026 11:40 PM
+Kasti garxa sokau ta
+Deepan
+ started a call that lasted 10 minutes. — 4/15/2026 11:40 PM
+Deepan — 4/19/2026 3:22 PM
+Koras mero kk xa garne help garna paryo
+koraskoirala — 9:04 PM
 # 🎯 Resume Analyzer API
 
-> An AI-powered resume analysis and job role matching API built with FastAPI and OpenAI.
+> AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
+
+[![CI/CD](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml/badge.svg)](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml)
+![Python](https://img.shields.io/badge/Python-3.12+-blue)
+
+README.md
+9 KB
+﻿
+koraskoirala
+koraskoirala
+ 
+Just sleeping 😴
+# 🎯 Resume Analyzer API
+
+> AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
+
+[![CI/CD](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml/badge.svg)](https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering/actions/workflows/deploy.yml)
+![Python](https://img.shields.io/badge/Python-3.12+-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.135+-green)
+![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-✓-blue)
+![AWS](https://img.shields.io/badge/AWS-EC2-orange)
 
 ---
 
 ## 📋 Table of Contents
 
-- [Project Overview](#project-overview)
-- [Tech Stack](#tech-stack)
-- [Project Architecture](#project-architecture)
-- [Getting Started](#getting-started)
-- [API Endpoints](#api-endpoints)
-- [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [Branching Strategy](#branching-strategy)
-- [Roadmap](#roadmap)
-- [Team](#team)
+- [Project Overview](#-project-overview)
+- [Live Demo](#-live-demo)
+- [Architecture](#-architecture)
+- [API Endpoints](#-api-endpoints)
+- [Tech Stack](#-tech-stack)
+- [CI/CD Pipeline](#-cicd-pipeline)
+- [Secrets Management](#-secrets-management)
+- [Getting Started](#-getting-started)
+- [Running Tests](#-running-tests)
+- [Docker](#-docker)
+- [Team](#-team)
 
 ---
 
-## 🧠 Project Overview
+## 🚀 Project Overview
 
-The Resume Analyzer API is a backend-only REST API that uses OpenAI's `gpt-4o-mini` model to:
+The Resume Analyzer API is a production-grade REST API that uses OpenAI's GPT-4o-mini to provide:
 
-1. **Analyze resumes** — Given a resume (PDF or plain text), the API returns a structured breakdown including an overall quality score, strengths, weaknesses, key skills, an improved professional summary, and a concrete career recommendation.
+- **Resume Analysis** — Upload a PDF resume and receive an AI-powered analysis including an overall quality score, strengths, weaknesses, key skills, an improved professional summary, and career recommendations.
+- **ATS Scoring** — Upload a PDF resume alongside a job description to receive an ATS compatibility score, matched and missing keywords, suggestions for improvement, and a verdict on whether the resume would pass automated screening.
 
-2. **Match job roles** — Given a resume (PDF or plain text), the API returns the top 3 job roles that best match the candidate's skills and experience, along with a match score and the key skills that make them a strong fit.
-
-This project is built as part of **CS 3321 — Introduction to Software Engineering** at Idaho State University. The focus is not just on building a working application but on the full engineering lifecycle — clean architecture, testing, secrets management, containerization, CI/CD, and cloud deployment.
+Built as a capstone project for CS 3321 — Introduction to Software Engineering at Idaho State University, Spring 2026.
 
 ---
 
-## 🛠 Tech Stack
+## 🌐 Live Demo
 
-| Layer | Technology |
-|---|---|
-| Language | Python 3.14 |
-| Framework | FastAPI |
-| Package Manager | uv |
-| AI Provider | OpenAI (gpt-4o-mini) |
-| PDF Parsing | PyMuPDF (fitz) + pdfplumber |
-| Data Validation | Pydantic |
-| Secrets Management | Doppler + GitHub Secrets |
-| Testing | PyTest + pytest-cov |
-| Containerization | Docker + Docker Hub |
-| Cloud Deployment | AWS |
-| CI/CD | GitHub Actions |
-| Version Control | Git + GitHub |
+The API is deployed and running live on AWS EC2:
+
+```
+http://54.241.193.136/docs
+```
+
+Test the endpoints interactively using the Swagger UI at the link above.
 
 ---
 
@@ -54,103 +103,90 @@ This project is built as part of **CS 3321 — Introduction to Software Engineer
 
 ```mermaid
 flowchart TD
-    A[Client\nPostman / curl / test script] --> B[FastAPI Application\nPython + uv]
+    Client["Client\nPostman / curl / test script"]
+    Doppler["Doppler\nSecrets Management"]
+    Docker["Docker\nContainerization"]
+    AWS["AWS\nCloud Deployment"]
+    GH["GitHub Actions\nCI/CD Pipeline"]
 
-    B --> C[POST /analyze\nFull resume analysis]
-    B --> D[POST /analyze/text\nPlain text analysis]
-    B --> E[POST /roles\nPDF job role matching]
-    B --> F[POST /roles/text\nPlain text job matching]
-    B --> G[GET /health\nAPI status check]
+    FastAPI["FastAPI Application\nPython + uv"]
 
-    C --> H[Resume Parser Service\nPDF via pdfplumber]
-    D --> I[Resume Parser Service\nPlain text]
-    E --> H
-    F --> I
+    Client --> FastAPI
+    Doppler --> FastAPI
+    Docker --> FastAPI
+    AWS --> FastAPI
+    GH --> FastAPI
 
-    H --> J[OpenAI Service\ngpt-4o-mini]
-    I --> J
+    FastAPI --> resume["POST /resume\nFull analysis + role matching"]
+    FastAPI --> ats["POST /ats\nATS compatibility scoring"]
+    FastAPI --> health["GET /health\nAPI status check"]
 
-    J --> K[OpenAI API\n3rd party]
+    resume --> parser["Resume Parser Service\nPDF via PyMuPDF"]
+    ats --> parser
 
-    L[Doppler\nSecrets Management] --> B
-    M[Docker\nContainerization] --> B
-    N[AWS\nCloud Deployment] --> B
-    O[GitHub Actions\nCI/CD Pipeline] --> B
+    parser --> openai["OpenAI Service\ngpt-4o-mini"]
+
+    openai --> api["OpenAI API\n3rd party"]
 ```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.14+
-- [uv](https://astral.sh/uv) installed
-- OpenAI API key
-- Git
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering.git
-cd Resume_Scanner_SoftwareEngineering
-```
-
-### 2. Create and Activate Virtual Environment
-
-```bash
-uv venv
-source .venv/bin/activate  # Mac/Linux
-# OR on Windows:
-.venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
-uv sync
-```
-
-### 4. Set Up Environment Variables
-
-Create a `.env` file in the root directory:
-
-```bash
-touch .env
-```
-
-Add your OpenAI API key:
-
-```
-OPENAI_API_KEY=your-openai-api-key-here
-```
-
-> ⚠️ **Never commit your `.env` file to GitHub. It is already in `.gitignore`.**
-
-### 5. Run the Application
-
-```bash
-uv run uvicorn main:app --reload
-```
-
-### 6. View API Documentation
-
-Open your browser and go to:
-
-```
-http://localhost:8000/docs
-```
-
-You will see the interactive FastAPI docs where you can test all endpoints directly.
 
 ---
 
 ## 📡 API Endpoints
 
-### `GET /health`
-Check if the API is running.
+### `POST /resume`
+Upload a PDF resume for a combined AI-powered analysis and job role matching.
+
+**Request:** `multipart/form-data`
+- `file` — PDF resume file
 
 **Response:**
+```json
+{
+  "score": 85,
+  "strengths": ["Strong Python skills", "..."],
+  "weaknesses": ["Lacks certifications", "..."],
+  "skills": ["Python", "FastAPI", "Docker"],
+  "improved_summary": "Results-driven developer...",
+  "recommendation": "Apply for software engineering internships",
+  "matched_roles": [
+    {
+      "title": "Machine Learning Engineer Intern",
+      "reason": "Strong ML experience...",
+      "match_score": 90,
+      "key_skills": ["Python", "TensorFlow"]
+    }
+  ]
+}
+```
+
+---
+
+### `POST /ats`
+Upload a PDF resume and job description to receive an ATS compatibility score.
+
+**Request:** `multipart/form-data`
+- `file` — PDF resume file
+- `job_description` — Plain text job description
+
+**Response:**
+```json
+{
+  "filename": "resume.pdf",
+  "result": {
+    "ats_score": 85,
+    "matched_keywords": ["Python", "FastAPI", "Docker"],
+    "missing_keywords": ["PostgreSQL"],
+    "suggestions": ["Add PostgreSQL experience"],
+    "verdict": "Likely to pass ATS screening"
+  }
+}
+```
+
+---
+
+### `GET /health`
+Returns API health status.
+
 ```json
 {
   "status": "ok",
@@ -160,226 +196,172 @@ Check if the API is running.
 
 ---
 
-### `POST /analyze`
-Upload a PDF resume for comprehensive AI-powered analysis.
+## 🛠 Tech Stack
 
-**Request:** `multipart/form-data` with a `file` field containing a PDF.
-
-**Response:**
-```json
-{
-  "filename": "resume.pdf",
-  "analysis": {
-    "score": 85,
-    "strengths": [
-      "Strong technical skills in machine learning",
-      "Relevant research experience",
-      "Clear educational path"
-    ],
-    "weaknesses": [
-      "Lacks internship or industry experience",
-      "Summary could be more specific about goals"
-    ],
-    "skills": [
-      "Machine Learning & Deep Learning",
-      "Python",
-      "Data Analysis & Visualization"
-    ],
-    "improved_summary": "Detail-oriented Computer Science student...",
-    "recommendation": "Seek internships or co-op positions to gain practical experience."
-  }
-}
-```
-
----
-
-### `POST /analyze/text`
-Submit resume as plain text for comprehensive AI-powered analysis. Useful for quick testing.
-
-**Request:**
-```json
-{
-  "resume_text": "John Doe, Software Engineer with 3 years of Python experience..."
-}
-```
-
-**Response:** Same structured format as `POST /analyze` but without filename.
-
----
-
-### `POST /roles`
-Upload a PDF resume and discover the top 3 job roles that best match your skills.
-
-**Request:** `multipart/form-data` with a `file` field containing a PDF.
-
-**Response:**
-```json
-{
-  "roles": [
-    {
-      "title": "Machine Learning Engineer",
-      "reason": "Strong Python and deep learning experience aligns well.",
-      "match_score": 90,
-      "key_skills": [
-        "Python",
-        "Machine Learning",
-        "Deep Learning"
-      ]
-    },
-    {
-      "title": "Data Scientist",
-      "reason": "Experience with data analysis and visualization.",
-      "match_score": 85,
-      "key_skills": [
-        "Data Analysis",
-        "Python",
-        "Visualization"
-      ]
-    },
-    {
-      "title": "Research Assistant",
-      "reason": "Current research role aligns with academic positions.",
-      "match_score": 80,
-      "key_skills": [
-        "Research",
-        "Technical Writing",
-        "Simulation"
-      ]
-    }
-  ]
-}
-```
-
----
-
-### `POST /roles/text`
-Submit resume as plain text and discover matching job roles. Useful for quick testing.
-
-**Request:**
-```json
-{
-  "resume_text": "John Doe, Software Engineer with 3 years of Python experience..."
-}
-```
-
-**Response:** Same structured format as `POST /roles`.
-
----
-
-## 🔐 Environment Variables
-
-| Variable | Description | Required |
-|---|---|---|
-| `OPENAI_API_KEY` | Your OpenAI API key | ✅ Yes |
-
-> In production, secrets are managed via **Doppler** and **GitHub Secrets**. Never hardcode secrets in your code. A violation of this rule results in an automatic **-15 points** on the final presentation.
-
----
-
-## 📁 Project Structure
-
-```
-Resume_Scanner_SoftwareEngineering/
-├── app/
-│   ├── __init__.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── schemas.py          # Pydantic request/response models
-│   └── routers/
-│       ├── __init__.py
-│       ├── analyze.py          # POST /analyze and /analyze/text
-│       └── roles.py            # POST /roles and /roles/text
-├── main.py                     # FastAPI app entry point
-├── pyproject.toml              # uv project config and dependencies
-├── uv.lock                     # Locked dependency versions
-├── .env                        # Local secrets (never committed)
-├── .gitignore                  # Files ignored by Git
-├── .python-version             # Python version lock
-└── README.md                   # You are here
-```
-
----
-
-## 🌿 Branching Strategy
-
-| Branch | Purpose |
+| Category | Technology |
 |---|---|
-| `master` | Production-ready code. Never commit directly. |
-| `feature/roles-endpoint` | Built POST /roles and POST /roles/text |
-| `feature/analyze-endpoint` | Built POST /analyze |
-| `feature/improve-endpoints` | Improved both endpoints with structured responses |
+| Language | Python 3.12+ |
+| Framework | FastAPI |
+| Package Manager | uv |
+| AI Provider | OpenAI GPT-4o-mini |
+| PDF Parsing | PyMuPDF (fitz) |
+| Validation | Pydantic |
+| Testing | pytest + pytest-cov |
+| Linting | Ruff |
+| Secrets | Doppler |
+| Container | Docker |
+| Registry | Docker Hub (koras7/resume-analyzer) |
+| Cloud | AWS EC2 |
+| CI/CD | GitHub Actions (4 jobs) |
 
-### Workflow
+---
 
-1. Always create a new branch from master for each feature
-2. Work on your feature branch
-3. Push your branch and open a Pull Request
-4. Get it reviewed by a teammate
-5. Merge into master
+## 🔄 CI/CD Pipeline
+
+Every push to `master` triggers a 4-job GitHub Actions pipeline:
+
+```mermaid
+flowchart LR
+    lint["🔍 Lint\nRuff check + format"]
+    coverage["🧪 Coverage\n32 tests · 100%"]
+    build["🏗️ Build & Push\nWheel → Docker → Hub"]
+    deploy["🚀 Deploy\nSSH → AWS → Run"]
+
+    lint --> coverage --> build --> deploy
+```
+
+| Job | Description |
+|---|---|
+| **Lint** | Runs Ruff linting and formatting checks across all source files |
+| **Coverage** | Runs 32 unit tests, enforces 80% minimum coverage using VeryGoodCoverage |
+| **Build & Push** | Builds Python wheel, Docker image, pushes to Docker Hub |
+| **Deploy** | SSHes into AWS EC2, pulls latest image, runs container with Doppler |
+
+---
+
+## 🔐 Secrets Management
+
+All secrets are managed through **Doppler** with separate `dev` and `prd` configs:
+
+| Secret | Description |
+|---|---|
+| `OPENAI_API_KEY` | OpenAI API key |
+| `HOST` | Server host (`0.0.0.0` in production) |
+| `PORT` | Server port (`80` in production) |
+| `DOCKER_USERNAME` | Docker Hub username |
+| `DOCKER_PASSWORD` | Docker Hub access token |
+| `AWS_IP` | EC2 instance IP address |
+| `AWS_EC2_USERNAME` | EC2 SSH username |
+| `SSH_AWS_PEM` | EC2 SSH private key |
+
+GitHub Actions uses a single `DOPPLER_SERVICE_TOKEN` secret to fetch all production secrets from Doppler at runtime. No secrets are ever hardcoded or stored in the repository.
+
+---
+
+## 🏁 Getting Started
+
+### Prerequisites
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/)
+- [Doppler CLI](https://docs.doppler.com/docs/install-cli)
+
+### Installation
 
 ```bash
-git checkout master
-git pull origin master
-git checkout -b feature/your-feature-name
-# ... do your work ...
-git add .
-git commit -m "Your descriptive commit message"
-git push origin feature/your-feature-name
-# Then open a Pull Request on GitHub
+# Clone the repository
+git clone https://github.com/akkabakovb/Resume_Scanner_SoftwareEngineering.git
+cd Resume_Scanner_SoftwareEngineering
+
+# Install dependencies
+uv sync --all-groups
+
+# Set up Doppler
+doppler setup
 ```
+
+### Running Locally
+
+```bash
+# With Doppler (recommended)
+doppler run -- uv run uvicorn src.resume_scanner.main:app --reload
+
+# With .env file
+uv run uvicorn src.resume_scanner.main:app --reload
+```
+
+Visit `http://localhost:8000/docs` to access the Swagger UI.
 
 ---
 
-## 🗺 Roadmap
+## 🧪 Running Tests
 
-### ✅ Completed
-- [x] Project setup with uv and FastAPI
-- [x] API architecture design
-- [x] `POST /analyze` — PDF resume analysis
-- [x] `POST /analyze/text` — plain text analysis
-- [x] `POST /roles` — PDF job role matching
-- [x] `POST /roles/text` — plain text job role matching
-- [x] `GET /health` — health check
-- [x] Structured JSON responses with Pydantic schemas
-- [x] OpenAI integration with gpt-4o-mini
-- [x] PDF parsing with PyMuPDF and pdfplumber
+```bash
+# Run all tests
+uv run pytest tests/ -v
 
-### 🔄 In Progress
-- [ ] Unit tests with PyTest
-- [ ] Mock OpenAI API calls in tests
+# Run with coverage report
+uv run pytest tests/ --cov=src/resume_scanner/app --cov-report=term-missing
 
-### 📋 Upcoming
-- [ ] 80% code coverage with pytest-cov
-- [ ] Linting with Ruff
-- [ ] Secrets management with Doppler
-- [ ] Dockerize the application
-- [ ] Push Docker image to Docker Hub
-- [ ] Deploy to AWS
-- [ ] GitHub Actions CI/CD pipeline (Test → Build → Deploy)
-- [ ] Final presentation
+# Run linting
+uv run ruff check src/ tests/
+uv run ruff format --check src/ tests/
+```
+
+**Current test results:**
+- ✅ 32 tests passing
+- ✅ 100% code coverage
+- ✅ All OpenAI calls mocked — no API credits used during testing
+
+---
+
+## 🐳 Docker
+
+### Pull from Docker Hub
+
+```bash
+docker pull koras7/resume-analyzer:latest
+```
+
+### Run with Doppler
+
+```bash
+docker run -p 80:80 \
+  -e DOPPLER_TOKEN=your-doppler-service-token \
+  koras7/resume-analyzer:latest
+```
+
+Visit `http://localhost/docs` to access the Swagger UI.
+
+### Build Locally
+
+```bash
+# Build wheel first
+uv build
+
+# Build Docker image
+docker build -t resume-analyzer .
+
+# Run locally
+docker run -p 80:80 \
+  -e DOPPLER_TOKEN=your-doppler-service-token \
+  resume-analyzer
+```
 
 ---
 
 ## 👥 Team
 
-| Name | GitHub | Role |
+| Name | GitHub | Contributions |
 |---|---|---|
-| Bektur Akkabakov | @akkabakovb | Team Lead, /analyze endpoint |
-| Koras Koirala | @koras7 | /roles endpoint, endpoint improvements |
-| Deepan | - | /roles endpoint |
-| Himanshu Jha | @himanshujha05 | /analyze endpoint |
-
-**Course:** CS 3321 — Introduction to Software Engineering
-**Instructor:** Ryan Davis
-**Institution:** Idaho State University — Spring 2026
+| Bektur Akkabakov | [@akkabakovb](https://github.com/akkabakovb) | Team Lead, /analyze endpoint, Dockerfile, CI/CD pipeline |
+| Koras Koirala | [@koras7](https://github.com/koras7) | /ats endpoint, /resume endpoint, unit tests, AWS deployment |
+| Deepan | — | /roles endpoint, /ats unit tests |
+| Himanshu Jha | [@himanshujha05](https://github.com/himanshujha05) | /analyze endpoint, /resume unit tests |
 
 ---
 
-## 📝 Notes For The Team
+## 📄 License
 
-- Always pull the latest master before starting work: `git pull origin master`
-- Never commit `.env` to GitHub — you will lose 15 points automatically on the final presentation
-- Always activate your virtual environment before working: `.venv\Scripts\activate`
-- Run the app with: `uv run uvicorn main:app --reload`
-- View interactive API docs at: `http://localhost:8000/docs`
-- If `uv.lock` has conflicts, delete it and run `uv sync` to regenerate
+This project was built for CS 3321 — Introduction to Software Engineering at Idaho State University, Spring 2026.
+README.md
+9 KB
