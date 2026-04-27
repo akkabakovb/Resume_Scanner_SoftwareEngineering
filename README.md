@@ -1,39 +1,3 @@
-Deepan
-deepan2527
-Online
-
-koraskoirala — 3/18/2026 12:08 AM
-yo garnu ani same branch ma hunxam hami tesma garna parxa
-Deepan — 3/18/2026 12:09 AM
-Ok
-koraskoirala — 4/15/2026 11:38 PM
-Dipak ji
-Deepan — 4/15/2026 11:38 PM
-Bhana
-koraskoirala — 4/15/2026 11:39 PM
-projects ma gayera ticket number #17 ma yo comment hanera close garnu ta ticket:
-
-Completed. Implemented 10 unit tests in tests/test_ats.py covering:
-
-test_ats_content_type (4 cases) — validates file type rejection 
-for docx, txt, png and accepts valid PDF
-test_ats_pdf_content (4 cases) — validates PDF content rejection
-for spaces, whitespace, empty pages and accepts valid content
-test_ats_empty_job_description — validates empty job description 
-returns 400 with correct error message
-test_ats_openai_error — validates OpenAI failure returns 500
-
-All OpenAI calls mocked using unittest.mock — no real API credits used
-All 10 tests passing ✅
-(Unit Tests for /ats endpoint)
-Deepan — 4/15/2026 11:40 PM
-Kasti garxa sokau ta
-Deepan
- started a call that lasted 10 minutes. — 4/15/2026 11:40 PM
-Deepan — 4/19/2026 3:22 PM
-Koras mero kk xa garne help garna paryo
-koraskoirala — 9:04 PM
-# 🎯 Resume Analyzer API
 
 > AI-powered resume analysis and ATS scoring REST API built with FastAPI and OpenAI GPT-4o-mini.
 
